@@ -9,7 +9,6 @@ namespace Outscal.BattleTank
     public class BulletView : MonoBehaviour
     {
         public BulletController bulletController { get; private set; }
-        public float m_MaxLifeTime = 1f;
 
         private void FixedUpdate()
         {
