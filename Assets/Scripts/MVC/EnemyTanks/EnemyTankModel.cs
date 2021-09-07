@@ -9,23 +9,24 @@ namespace Outscal.BattleTank
     /// </summary>
     public class EnemyTankModel
     {
+        #region referances of other classes
         private EnemyTankController enemyTankController;
         private EnemyTankScriptableObject EnemyTankScriptableObject;
+        #endregion
 
+        #region properties
         public EnemyTankType EnemyTankType { get; private set; }
         public float Speed { get; private set; }
         public int Health { get; set; }
-
         public float fireRate { get; private set; }
-
-        public BulletScriptableObject bulletForce { get; private set; }
-
+        //public BulletScriptableObject bulletForce { get; private set; }
         public BulletScriptableObject bulletType { get; private set; }
-
-
         public float patrollingRadius { get; private set; }
+        #endregion
 
+        #region componenets
         public BoxCollider groundArea;
+        #endregion
 
         public EnemyTankModel(EnemyTankScriptableObject enemyTankScriptableObject)
         {
@@ -41,8 +42,9 @@ namespace Outscal.BattleTank
         {
             enemyTankController = _enemyTankController;
         }
+
         //after enemy death distroy model
-        internal void DestroyModel()
+        public void DestroyModel()
         {
             enemyTankController = null;
             bulletType = null;

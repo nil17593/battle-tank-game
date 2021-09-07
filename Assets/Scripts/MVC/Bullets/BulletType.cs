@@ -4,11 +4,9 @@ namespace Outscal.BattleTank
     public enum BulletType
     {
         None,
-        Slow,
-        Medium,
-        Fast,
-        HighDamage,
-        LowDamage,
+        Yellow,   //speed  15
+        Blue, //speed  20
+        Green,    //speed 25
         EnemyBullet
     }
 }

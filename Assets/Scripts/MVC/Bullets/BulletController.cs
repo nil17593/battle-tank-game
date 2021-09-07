@@ -8,9 +8,14 @@ namespace Outscal.BattleTank
     /// </summary>
     public class BulletController 
     {
+        #region properties
         public BulletView bulletView { get; private set; }
         public BulletModel bulletModel { get; private set; }
+        #endregion
+
+        #region components
         private Rigidbody rigidbody;
+        #endregion
 
         public BulletController(BulletView _bulletView, BulletModel _bulletModel, Vector3 position, Quaternion rotation)
         {

@@ -60,7 +60,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f80bad2d3f4625240b9791bdcc946fce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tankType: 3
+  tankType: 1
   BulletShootPoint: {fileID: 5546271529382914718}
   childs:
   - {fileID: 140344461654184880}

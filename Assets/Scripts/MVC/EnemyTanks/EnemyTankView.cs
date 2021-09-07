@@ -7,29 +7,31 @@ namespace Outscal.BattleTank
     /// <summary>
     /// creating enemy tank view
     /// </summary>
-    public class EnemyTankView : MonoBehaviour
+    public class EnemyTankView : MonoBehaviour,IDamagable
     {
         #region Components And Variables
         public NavMeshAgent enemyNavMesh;
         public EnemyTankController enemyTankController;
         private BoxCollider ground;
         public float maxX, maxZ, minX, minZ;
-        public float timer, patrolTime;
+        public float timer,patrolTime;
         public float howClose;
         public float canFire = 0f;
         public Transform BulletShootPoint;
         public MeshRenderer[] childs;
+        #endregion
 
         #region EnemyTankSates
         public EnemyPatrollingState patrollingState;
         public EnemyChasingState chasingState;
         public EnemyAttackingState attackingState;
         public EnemyTankState currentState;
+        #endregion
 
         #region EnemyEnums
         public EnemyState initialState;
         public EnemyState activeState;
-    
+        #endregion
 
         void Awake()
         {
@@ -41,11 +43,10 @@ namespace Outscal.BattleTank
             currentState = patrollingState;
             InitializeState();
             SetGroundForEnemyPatrolling();
-            //setPlayerTransform();
             timer = 5f;
             patrolTime = 2f;
             howClose = 15f;
-            // Invoke("Patrol", 1f);
+            //Invoke("Patrol", 1f);
         }
 
         public void SetEnemyTankController(EnemyTankController _enemyController)
@@ -53,6 +54,7 @@ namespace Outscal.BattleTank
             enemyTankController = _enemyController;
         }
 
+        //setting ground for patrolling of enemy
         private void SetGroundForEnemyPatrolling()
         {
             ground = GroundBoxCollider.groundBoxCollider;
@@ -91,6 +93,7 @@ namespace Outscal.BattleTank
             }
             currentState.OnEnterState();
         }
+
         //after death all the child componenets will also destroy
         public void DestroyView()
         {
@@ -99,11 +102,16 @@ namespace Outscal.BattleTank
             {
                 childs[i] = null;
             }
-
             BulletShootPoint = null;
             enemyNavMesh = null;
             ground = null;
             Destroy(this.gameObject);
+        }
+
+        //interface for apply damage to enemy
+        public void TakeDamage(int damage)
+        {
+            enemyTankController.ApplyDamage(damage);
         }
     }
 }

@@ -8,6 +8,11 @@ namespace Outscal.BattleTank
     /// </summary>
     public class BulletService : MonoGenericSingletone<BulletService>
     {
+        protected override void Awake()
+        {
+            base.Awake();
+        }
+
         //creating bullet
         public void CreateNewBullet(Vector3 position, Quaternion rotation, BulletScriptableObject type)
         {

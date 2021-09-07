@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,23 +10,48 @@ namespace Outscal.BattleTank
     /// </summary>
     public class TankController
     {
+        #region components
         private Rigidbody rigidbody;
+        private DestroyGround destroyGround;
+        #endregion
+
+        #region properties
         public TankModel TankModel { get; private set; }
         public TankView TankView { get; private set; }
+        #endregion
+
+        #region referances of other scripts
         private EnemyTankController enemyTankController;
-        private DestroyGround destroyGround;
+        #endregion
+
         public TankController(TankModel tankModel, TankView tankPrefab)
         {
-            TankModel = tankModel;
-            if (tankPrefab != null)
-            {
-                TankView = GameObject.Instantiate<TankView>(tankPrefab);
-            }
+            TankModel = tankModel;     
+            TankView = GameObject.Instantiate<TankView>(tankPrefab);
             rigidbody = TankView.GetComponent<Rigidbody>();
             TankView.SetTankController(this);
             TankModel.SetTankController(this);
+            //CameraController.Instance.SetTarget(TankView.transform);
             CameraController.Instance.SetTarget(TankView.transform);
             Debug.Log(TankView);
+            SubscribeEvents();
+        }
+
+        //subscribing bullets fired event
+        private void SubscribeEvents()
+        {
+            AchievementService.Instance.OnPlayerFiredBullet += UpdateBulletsFiredCounter;
+        }
+
+        //counter for fired bullets to unlock achievements
+        private void UpdateBulletsFiredCounter()
+        {
+            TankModel.bulletsFired += 1;
+            // PlayerPrefs.SetInt("BulletsFired", tankModel.bulletFired);
+            // Debug.Log(PlayerPrefs.GetInt("BulletsFired"));
+            Debug.Log(TankModel.bulletsFired);
+            AchievementService.Instance.GetAchievementController().CheckForBulletsfiredAchievement();
+
         }
 
         //tank movement
@@ -49,8 +75,16 @@ namespace Outscal.BattleTank
         //tank shooting
         public void ShootBullet()
         {
-             BulletService.Instance.CreateNewBullet(GetFiringPosition(), GetFiringAngle(), GetBullet());
+            AchievementService.Instance.InvokeOnPlayerFiredBulletEvent();
+            BulletService.Instance.CreateNewBullet(GetFiringPosition(), GetFiringAngle(), GetBullet());
         }
+
+        //unsubscribing from event
+        public void UnSubscribeEvent()
+        {
+            AchievementService.Instance.OnPlayerFiredBullet -= UpdateBulletsFiredCounter;
+        }
+
         //player tank will take damage 
         public void ApplyDamage(int damage)
         {
@@ -73,6 +107,7 @@ namespace Outscal.BattleTank
             TankModel = null;
             TankView = null;
             rigidbody = null;
+            UnSubscribeEvent();
         }
 
         //returning bullet firing position

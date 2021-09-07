@@ -9,9 +9,14 @@ namespace Outscal.BattleTank
     /// </summary>
     public class EnemyTankController
     {
+        #region referances of other class
         private EnemyTankService enemyTankService;
+        #endregion
+
+        #region properties
         public EnemyTankModel enemyTankModel { get; private set; }
         public EnemyTankView enemyTankView { get; private set; }
+        #endregion
 
         public EnemyTankController(EnemyTankModel _enemyModel, EnemyTankView _enemyView, Vector3 pos)
         {
@@ -21,6 +26,7 @@ namespace Outscal.BattleTank
             enemyTankModel.SetEnemyTankController(this);
 
         }
+
         //get random position to patroll
         public Vector3 GetRandomPosition()
         {
@@ -29,12 +35,14 @@ namespace Outscal.BattleTank
             Vector3 randDir = new Vector3(x, 0, z);
             return randDir;
         }
+
         //setting patrolling destination for enemies
         private void SetPatrolingDestination()
         {
             Vector3 newDestination = GetRandomPosition();
             enemyTankView.enemyNavMesh.SetDestination(newDestination);
         }
+
         //enemy patrolling function
         public void Patrol()
         {
@@ -45,6 +53,7 @@ namespace Outscal.BattleTank
                 enemyTankView.timer = 0;
             }
         }
+
         //enemy patrolling and will attck on player when player entor into nav mesh range
         public void EnemyPatrollingAI()
         {
@@ -55,16 +64,10 @@ namespace Outscal.BattleTank
                 {
                     enemyTankView.currentState.ChangeState(enemyTankView.chasingState);
                 }
-                else
-                {
-                    enemyTankView.currentState.ChangeState(enemyTankView.patrollingState);
-                }
             }
-            else
-            {
                 enemyTankView.currentState.ChangeState(enemyTankView.patrollingState);
-            }
         }
+
         //enemy chase player to attack
         public void ChaseToPlayer()
         {
@@ -72,8 +75,9 @@ namespace Outscal.BattleTank
             enemyTankView.enemyNavMesh.SetDestination(TankService.Instance.PlayerPos().position);
             ShootBullet();
         }
+
         //enemy bullet shooting
-        private void ShootBullet()
+        public void ShootBullet()
         {
             if (enemyTankView.canFire < Time.time)
             {
@@ -81,20 +85,24 @@ namespace Outscal.BattleTank
                 CreatingBullet();
             }
         }
+
         //creating bullet for enemy tank
         public void CreatingBullet()
         {
             BulletService.Instance.CreateNewBullet(GetFiringPosition(), GetFiringAngle(), GetBullet());
         }
+
         //triggers when enemy die
         public void DeadEnemy()
         {
+            AchievementService.Instance.InvokeEnemyKilledEvent();
             EnemyTankService.Instance.DestroyEnemyTank(this);
         }
+
         //enemy will take damage
         public void ApplyDamage(int damage)
         {
-            enemyTankModel.Health -= damage;
+            enemyTankModel.Health -= damage; 
             Debug.Log("Enemy Health : " + enemyTankModel.Health);
 
             if (enemyTankModel.Health <= 0)
@@ -103,6 +111,7 @@ namespace Outscal.BattleTank
                 DeadEnemy();
             }
         }
+
         //after death destroy model and view
         public void DestroyEnemyController()
         {
@@ -111,16 +120,19 @@ namespace Outscal.BattleTank
             enemyTankModel = null;
             enemyTankView = null;
         }
+
         //setting firing poaition for enemy tank
         public Vector3 GetFiringPosition()
         {
             return enemyTankView.BulletShootPoint.position;
         }
+
         //setting firing angle
         public Quaternion GetFiringAngle()
         {
             return enemyTankView.transform.rotation;
         }
+
         //enemy tanks get bullet scriptable object
         public BulletScriptableObject GetBullet()
         {

@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7704aa33182fe2f4397ead94b8b7854f, type: 3}
+  m_Name: YellowTankBullet
+  m_EditorClassIdentifier: 
+  BulletView: {fileID: 114607351675402580, guid: 5ba3079163d71a34d8fb15c20acdc62d,
+    type: 3}
+  bulletType: 3
+  bulletForce: 20
+  bulletDamage: 10

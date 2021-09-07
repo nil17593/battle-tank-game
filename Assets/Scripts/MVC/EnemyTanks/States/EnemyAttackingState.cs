@@ -15,7 +15,7 @@ namespace Outscal.BattleTank
         {
             base.OnEnterState();
             enemyTankView.activeState = EnemyState.Attacking;
-            
+            enemyTankView.enemyTankController.ShootBullet();
         }
         //enemy exits from attacking state
         public override void OnExitState()

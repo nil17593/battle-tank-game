@@ -9,25 +9,32 @@ namespace Outscal.BattleTank
     /// </summary>
     public class TankModel
     {
+        #region properties
         public int Speed { get; private set; }
         public int Health { get; set; }
         public TankType TankType { get; private set; }
         public BulletScriptableObject bulletType { get; private set; }
         public float rotationSpeed { get; private set; }
         public float fireRate { get; private set; }
-        public float SpeedLive { get { return tankScriptableObject.Speed; } }
-        private TankScriptableObject tankScriptableObject;
+        public int enemyKilled { get; set; }
+        public int bulletsFired { get; set; }
+        #endregion
+
+        #region referances of other classes
         private TankController tankController;
+        #endregion
 
         public TankModel(TankScriptableObject tankScriptableObject)
         {
-            this.tankScriptableObject = tankScriptableObject;
+            //this.tankScriptableObject = tankScriptableObject;
             TankType = tankScriptableObject.TankType;
             Speed = (int)tankScriptableObject.Speed;
-            this.Health = tankScriptableObject.Health;
+            Health = tankScriptableObject.Health;
             rotationSpeed = tankScriptableObject.rotationSpeed;
             fireRate = tankScriptableObject.fireRate;
             bulletType = tankScriptableObject.bulletType;
+            bulletsFired = 0;
+            enemyKilled = 0;
         }
 
         //setting tenk controller
@@ -41,7 +48,5 @@ namespace Outscal.BattleTank
             bulletType = null;
             tankController = null;
         }
-
-
     }
 }
