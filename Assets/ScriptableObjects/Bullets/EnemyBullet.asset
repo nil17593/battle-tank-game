@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7704aa33182fe2f4397ead94b8b7854f, type: 3}
   m_Name: EnemyBullet
   m_EditorClassIdentifier: 
-  BulletView: {fileID: 114607351675402580, guid: 5ba3079163d71a34d8fb15c20acdc62d,
+  BulletView: {fileID: 114607351675402580, guid: 321b0c08d6c190b4aaf79989c7cc8c76,
     type: 3}
-  bulletType: 6
+  bulletType: 4
   bulletForce: 20
   bulletDamage: 10

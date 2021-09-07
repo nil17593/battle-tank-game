@@ -26,10 +26,10 @@ namespace Outscal.BattleTank
         {
             if (collision.gameObject.GetComponent<EnemyTankView>() != null)
             {
-                EnemyTankService.Instance.GetEnemyTankController().ApplyDamage(bulletController.bulletModel.Damage);
+                //EnemyTankService.Instance.GetEnemyTankController().ApplyDamage(bulletController.bulletModel.Damage);
 
-                //EnemyTankView enemyTankView = collision.gameObject.GetComponent<EnemyTankView>();
-                //enemyTankView.enemyTankController.ApplyDamage(bulletController.bulletModel.Damage);
+                EnemyTankView enemyTankView = collision.gameObject.GetComponent<EnemyTankView>();
+                enemyTankView.enemyTankController.ApplyDamage(bulletController.bulletModel.Damage);
             }
             else if (collision.gameObject.GetComponent<TankView>() != null)
             {   

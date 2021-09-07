@@ -32,10 +32,11 @@ namespace Outscal.BattleTank
             base.Awake();
         }
 
-        private void Start()
+        async void Start()
         {
-            StartCoroutine(SpawnWaiting());
-            count++;
+            count = enemyPos.Count;
+            await new WaitForSeconds(5f);
+            SpawnWaiting();
             SubScribeEvent();
         }
 
@@ -68,25 +69,21 @@ namespace Outscal.BattleTank
         //enemy spawning randomly 
         void SpawningEnemy()
         {
-            int num = Random.Range(0, enemyPos.Count-1);
+            int num = Random.Range(0, enemyPos.Count);
             CreateNewTank(enemyPos[num]);
             enemyPos.RemoveAt(num);
         }
 
         //coroutine for spawn enemies  
-        IEnumerator SpawnWaiting()
+        async void SpawnWaiting()
         {
-            SpawningEnemy();
-            yield return new WaitForSeconds(spwanTime);
-            if (count >= 5)
+            for (int i = 0; i < count; i++)
             {
-                StopCoroutine(SpawnWaiting());
+                await new WaitForSeconds(spwanTime);
+                SpawningEnemy();
+                Debug.Log("Wait for 5 sec");
+
             }
-            else
-            {
-                StartCoroutine(SpawnWaiting());
-            }
-            count++;
         }
 
         //destroy enemy tank after death

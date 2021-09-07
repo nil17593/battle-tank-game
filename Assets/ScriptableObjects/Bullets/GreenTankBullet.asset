@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BulletView: {fileID: 114607351675402580, guid: 5ba3079163d71a34d8fb15c20acdc62d,
     type: 3}
-  bulletType: 2
+  bulletType: 3
   bulletForce: 15
   bulletDamage: 10
