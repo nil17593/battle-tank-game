@@ -91,6 +91,7 @@ namespace Outscal.BattleTank
                     tanks.Remove(tank);
                 }
             }
+            UIManager.Instance.PopUpPlayerLosePanel();
            // destroyGround.SetActive(false);   
         }
 
@@ -98,6 +99,7 @@ namespace Outscal.BattleTank
         async void DestroyAllEnemies()
         {
             enemyControllers = EnemyTankService.Instance.enemyTanksList;
+            //UIManager.Instance.PopUpPlayerWinPanel();
             EnemyTankService.Instance.UnsubscribeEvents();
             for (int i = 0; i < enemyControllers.Count; i++)
             {
@@ -107,7 +109,7 @@ namespace Outscal.BattleTank
                     enemyControllers[i].DeadEnemy();
                 }
             }
-
+            
         }
     }
 }

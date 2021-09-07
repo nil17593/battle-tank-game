@@ -95,6 +95,7 @@ namespace Outscal.BattleTank
         //triggers when enemy die
         public void DeadEnemy()
         {
+            //UIManager.Instance.PopUpPlayerWinPanel();
             AchievementService.Instance.InvokeEnemyKilledEvent();
             EnemyTankService.Instance.DestroyEnemyTank(this);
         }

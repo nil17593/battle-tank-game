@@ -64,6 +64,10 @@ namespace Outscal.BattleTank
             // Debug.Log(TankService.instance.GetCurrentTankModel().EnemiesKilled);
             // UIService.instance.UpdateScoreText();
             AchievementService.Instance.GetAchievementController().CheckForEnemyKilledAchievement();
+            if (TankService.Instance.GetCurrentTankModel().enemyKilled == 5)
+            {
+                UIManager.Instance.PopUpPlayerWinPanel();
+            }
         }
 
         //enemy spawning randomly 
