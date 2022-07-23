@@ -98,6 +98,7 @@ namespace Outscal.BattleTank
             //UIManager.Instance.PopUpPlayerWinPanel();
             AchievementService.Instance.InvokeEnemyKilledEvent();
             EnemyTankService.Instance.DestroyEnemyTank(this);
+            UIManager.Instance.UpdateScoreText();
         }
 
         //enemy will take damage

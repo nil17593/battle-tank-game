@@ -16,6 +16,10 @@ namespace Outscal.BattleTank
         [SerializeField] private ParticleSystem bulletVfx;
         #endregion
 
+        #region referances of other classes
+        private EnemyTankView enemyTank;
+        #endregion
+
         private void FixedUpdate()
         {
             bulletController.Movement();
@@ -31,17 +35,22 @@ namespace Outscal.BattleTank
             if (collision.gameObject.GetComponent<EnemyTankView>() != null)
             {
                 //EnemyTankService.Instance.GetEnemyTankController().ApplyDamage(bulletController.bulletModel.Damage);
-
                 EnemyTankView enemyTankView = collision.gameObject.GetComponent<EnemyTankView>();
                 enemyTankView.enemyTankController.ApplyDamage(bulletController.bulletModel.Damage);
-                bulletVfx.Play();
             }
             else if (collision.gameObject.GetComponent<TankView>() != null)
             {
-                bulletVfx.Play();
                 TankService.Instance.GetTankController().ApplyDamage(bulletController.bulletModel.Damage);
             }
-                Destroy(gameObject);
+            DestroyBullets();
+        }
+
+        private void DestroyBullets()
+        {
+            bulletVfx.transform.parent = null;
+            bulletVfx.Play();
+            //Destroy(BullectDestroyVFX.gameObject, BullectDestroyVFX.main.duration);
+            Destroy(gameObject);
         }
     }
 }

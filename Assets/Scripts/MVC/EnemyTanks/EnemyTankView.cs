@@ -33,6 +33,9 @@ namespace Outscal.BattleTank
         public EnemyState activeState;
         #endregion
 
+       
+        
+        
         void Awake()
         {
             enemyNavMesh = gameObject.GetComponent<NavMeshAgent>();

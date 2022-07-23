@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Outscal.BattleTank
 {
-    /// <summary>
+    /// <summary> 
     /// enemy tank service
     /// </summary>
     public class EnemyTankService : MonoGenericSingletone<EnemyTankService>

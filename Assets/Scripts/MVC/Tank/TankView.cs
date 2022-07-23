@@ -22,6 +22,7 @@ namespace Outscal.BattleTank
         #region components
         public MeshRenderer[] childs;
         public Transform BulletShootPoint;
+        //public ParticleSystem tankMovementVFX;
         #endregion
 
         private void Update()

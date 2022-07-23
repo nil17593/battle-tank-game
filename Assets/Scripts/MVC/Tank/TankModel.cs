@@ -37,7 +37,7 @@ namespace Outscal.BattleTank
             enemyKilled = 0;
         }
 
-        //setting tenk controller
+        //setting tank controller
         public void SetTankController(TankController _tankController)
         {
             tankController = _tankController;
@@ -48,6 +48,11 @@ namespace Outscal.BattleTank
         {
             bulletType = null;
             tankController = null;
+        }
+
+        public int GetHealth()
+        {
+            return Health;
         }
     }
 }

@@ -31,7 +31,6 @@ namespace Outscal.BattleTank
             rigidbody = TankView.GetComponent<Rigidbody>();
             TankView.SetTankController(this);
             TankModel.SetTankController(this);
-            //CameraController.Instance.SetTarget(TankView.transform);
             CameraController.Instance.SetTarget(TankView.transform);
             Debug.Log(TankView);
             SubscribeEvents();
@@ -46,7 +45,7 @@ namespace Outscal.BattleTank
         //counter for fired bullets to unlock achievements
         private void UpdateBulletsFiredCounter()
         {
-            TankModel.bulletsFired += 1;
+            TankModel.bulletsFired += 1;          
             // PlayerPrefs.SetInt("BulletsFired", tankModel.bulletFired);
             // Debug.Log(PlayerPrefs.GetInt("BulletsFired"));
             Debug.Log(TankModel.bulletsFired);
@@ -60,7 +59,7 @@ namespace Outscal.BattleTank
             Vector3 mov = TankView.transform.position;
             mov += movement * speed * Time.deltaTime * TankView.transform.forward;
             rigidbody.MovePosition(mov);
-                                                                                                                                                                                                                                                                                                                                                                                                                       
+            //TankView.tankMovementVFX.Play();
             TankService.Instance.GetPlayerPos(TankView.transform);
         }
 
@@ -89,6 +88,7 @@ namespace Outscal.BattleTank
         public void ApplyDamage(int damage)
         {
             TankModel.Health-=damage;
+            UIManager.Instance.UpdateHealthText(TankModel.Health);
             if (TankModel.Health <= 0)
             {
                 Dead();

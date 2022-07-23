@@ -60,13 +60,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f80bad2d3f4625240b9791bdcc946fce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tankType: 3
-  BulletShootPoint: {fileID: 3637405947111136822}
   childs:
   - {fileID: 140344461654184880}
   - {fileID: 140344461654184886}
   - {fileID: 140344461654184888}
   - {fileID: 140344461654184882}
+  BulletShootPoint: {fileID: 3637405947111136822}
+  tankMovementVFX: {fileID: 0}
 --- !u!54 &54296812966323160
 Rigidbody:
   m_ObjectHideFlags: 0

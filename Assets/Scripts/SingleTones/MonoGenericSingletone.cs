@@ -19,11 +19,11 @@ namespace Outscal.BattleTank
             if (instance == null)
             {
                 instance = (T)this;
-                DontDestroyOnLoad(this.gameObject);
+                //DontDestroyOnLoad(this.gameObject);
             }
             else
             {
-                Destroy(this.gameObject);
+                Destroy(this);
             }
         }
     }

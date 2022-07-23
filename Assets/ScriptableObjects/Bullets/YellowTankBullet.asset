@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7704aa33182fe2f4397ead94b8b7854f, type: 3}
   m_Name: YellowTankBullet
   m_EditorClassIdentifier: 
-  BulletView: {fileID: 114607351675402580, guid: 5ba3079163d71a34d8fb15c20acdc62d,
+  BulletView: {fileID: 114607351675402580, guid: ae2e3b683208d0147b641347ae649043,
     type: 3}
   bulletType: 1
   bulletForce: 20

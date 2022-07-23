@@ -6,7 +6,7 @@ namespace Outscal.BattleTank
 {
     /// <summary>
     /// service class that handles all tank services
-    /// and it inherits Monobehaviour class
+    /// and it inherits generic singleton class
     /// </summary>
     public class TankService : MonoGenericSingletone<TankService>
     {
@@ -35,12 +35,17 @@ namespace Outscal.BattleTank
         private int randomNo;
         #endregion
 
+        protected override void Awake()
+        {
+            base.Awake();
+        }
+
         private void Start()
         {
             CreateNewTank();
         }
 
-        private TankController CreateNewTank()
+        public TankController CreateNewTank()
         {
             randomNo = Random.Range(0, tankList.tanks.Length);
             TankScriptableObject tankScriptableObject = tankList.tanks[randomNo];
@@ -49,8 +54,7 @@ namespace Outscal.BattleTank
             currentTankModel = tankModel;
             tankController = new TankController(tankModel, TankView);
             tanks.Add(tankController);
-            return tankController;
-            
+            return tankController;           
         }
 
         //return current tank model
@@ -81,7 +85,7 @@ namespace Outscal.BattleTank
         //destroy child components of tank after 
         public void DestroyTank(TankController tank)
         {
-            DestroyAllEnemies();
+            //DestroyAllEnemies();
             tank.DestroyController();
             for (int i = 0; i < tanks.Count; i++)
             {
