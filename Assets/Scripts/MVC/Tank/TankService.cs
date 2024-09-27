@@ -6,53 +6,86 @@ namespace Outscal.BattleTank
 {
     /// <summary>
     /// service class that handles all tank services
-    /// and it inherits Monobehaviour class
+    /// and it inherits generic singleton class
     /// </summary>
     public class TankService : MonoGenericSingletone<TankService>
     {
-        public TankScriptableObjectList tankList;
+        #region serialized fields
+        [SerializeField] private TankScriptableObjectList tankList;
+        #endregion
+
+        #region properties
         public TankScriptableObject TankScriptableObject { get; private set; }
         public TankView TankView { get; private set; }
+        #endregion
+
+        #region lists
         private List<TankController> tanks = new List<TankController>();
         private List<EnemyTankController> enemyControllers;
+        #endregion
+
+        #region referances of other scripts
         private TankController tankController;
+        private TankModel currentTankModel;
+        #endregion
+
+        #region private variables
         private Transform pos;
-        public GameObject destroyGround;
-        int randomNo;
+        private GameObject destroyGround;
+        private int randomNo;
+        #endregion
+
+        protected override void Awake()
+        {
+            base.Awake();
+        }
 
         private void Start()
         {
             CreateNewTank();
         }
 
-        private TankController CreateNewTank()
+        public TankController CreateNewTank()
         {
             randomNo = Random.Range(0, tankList.tanks.Length);
             TankScriptableObject tankScriptableObject = tankList.tanks[randomNo];
             TankView = tankScriptableObject.TankView;
             TankModel tankModel = new TankModel(tankScriptableObject);
+            currentTankModel = tankModel;
             tankController = new TankController(tankModel, TankView);
             tanks.Add(tankController);
-            return tankController;
+            return tankController;           
         }
 
+        //return current tank model
+        public TankModel GetCurrentTankModel()
+        {
+            Debug.Log(currentTankModel.ToString());
+            return currentTankModel;
+        }
+
+        //return tank controller
         public TankController GetTankController()
         {
             return tankController;
         }
+
+        //setting player position
         public void GetPlayerPos(Transform _position)
         {
             pos = _position;
         }
 
+        //return player position to the caller
         public Transform PlayerPos()
         {
             return pos;
         }
 
+        //destroy child components of tank after 
         public void DestroyTank(TankController tank)
         {
-            DestroyAllEnemies();
+            //DestroyAllEnemies();
             tank.DestroyController();
             for (int i = 0; i < tanks.Count; i++)
             {
@@ -62,22 +95,25 @@ namespace Outscal.BattleTank
                     tanks.Remove(tank);
                 }
             }
+            UIManager.Instance.PopUpPlayerLosePanel();
            // destroyGround.SetActive(false);   
         }
 
+        //destroy all enmies present in scene after players death
         async void DestroyAllEnemies()
         {
             enemyControllers = EnemyTankService.Instance.enemyTanksList;
-
+            //UIManager.Instance.PopUpPlayerWinPanel();
+            EnemyTankService.Instance.UnsubscribeEvents();
             for (int i = 0; i < enemyControllers.Count; i++)
             {
-                if (EnemyTankService.Instance.enemyTanksList[i].EnemyTankView != null)
+                if (EnemyTankService.Instance.enemyTanksList[i].enemyTankView != null)
                 {
                     await new WaitForSeconds(2f);
-                    enemyControllers[i].Dead();
+                    enemyControllers[i].DeadEnemy();
                 }
             }
-
+            
         }
     }
 }

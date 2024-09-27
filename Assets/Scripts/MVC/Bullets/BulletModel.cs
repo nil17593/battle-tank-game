@@ -9,14 +9,15 @@ namespace Outscal.BattleTank
     /// </summary>
     public class BulletModel
     {
+        #region properties
         public float BulletForce { get; private set; }
         public int Damage { get; private set; }
         public BulletType Type { get; private set; }
         public BulletController bulletController { get; private set; }
+        #endregion
 
         public BulletModel(BulletScriptableObject bulletScriptableObject)
         {
-            //this.bulletScriptableObject = bulletScriptableObject;
             BulletForce = bulletScriptableObject.bulletForce;           
             Damage = bulletScriptableObject.bulletDamage;
             Type = bulletScriptableObject.bulletType;

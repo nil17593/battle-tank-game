@@ -10,12 +10,20 @@ namespace Outscal.BattleTank
     /// </summary>
     public class TankView : MonoBehaviour, IDamagable
     {
+        #region referance of other scripts
         private TankController tankController;
-        [SerializeField] private TankType tankType;
+        #endregion
+
+        #region private variables
         private float movement,rotation;
-        public Transform BulletShootPoint;
         private float canFire=0f;
+        #endregion
+
+        #region components
         public MeshRenderer[] childs;
+        public Transform BulletShootPoint;
+        //public ParticleSystem tankMovementVFX;
+        #endregion
 
         private void Update()
         {
@@ -28,6 +36,7 @@ namespace Outscal.BattleTank
             tankController.TankMovement(movement, tankController.TankModel.Speed);
             tankController.TankRotation(rotation, tankController.TankModel.rotationSpeed);
         }
+
         //tank movement
         private void Movement()
         {
@@ -49,6 +58,7 @@ namespace Outscal.BattleTank
                 tankController.ShootBullet();
             }
         }
+
         //triggered after tank distroyed
         public void DestroyView()
         {
@@ -60,6 +70,7 @@ namespace Outscal.BattleTank
             BulletShootPoint = null;
             Destroy(this.gameObject);
         }
+
         //player tank will take damage
         public void TakeDamage(int damage)
         {

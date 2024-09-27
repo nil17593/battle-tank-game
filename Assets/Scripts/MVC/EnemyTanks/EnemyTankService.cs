@@ -4,23 +4,40 @@ using UnityEngine;
 
 namespace Outscal.BattleTank
 {
-    /// <summary>
+    /// <summary> 
     /// enemy tank service
     /// </summary>
     public class EnemyTankService : MonoGenericSingletone<EnemyTankService>
     {
-        public EnemyTankScriptableObject enemyTankScriptableObject;
+        #region serialized fields
+        [SerializeField] private EnemyTankScriptableObject enemyTankScriptableObject;
+        #endregion
+
+        #region Lists
         public List<Transform> enemyPos;
-        private EnemyTankController enemyTankController;
         public List<EnemyTankController> enemyTanksList = new List<EnemyTankController>();
+        #endregion
+
+        #region referances of other classes
+        private EnemyTankController enemyTankController;
+        #endregion
+
+        #region private variables
         private int count = 0;
         private float spwanTime = 5f;
+        #endregion
 
-        private void Start()
+        protected override void Awake()
         {
-            count = 0;
-            StartCoroutine(SpawnWaiting());
-            count++;           
+            base.Awake();
+        }
+
+        async void Start()
+        {
+            count = enemyPos.Count;
+            await new WaitForSeconds(5f);
+            SpawnWaiting();
+            SubScribeEvent();
         }
 
         private EnemyTankController CreateNewTank(Transform enemyNewPos)
@@ -33,33 +50,60 @@ namespace Outscal.BattleTank
             return enemyTankController;
         }
 
+        //subscribe enemy kill event
+        private void SubScribeEvent()
+        {
+            AchievementService.Instance.OnEnemyKilled += UpdateEnemiesKilledCount;
+        }
+
+        //updates enemy killed count for unlock achivements
+        private void UpdateEnemiesKilledCount()
+        {
+            TankService.Instance.GetCurrentTankModel().enemyKilled += 1;
+            // PlayerPrefs.SetInt("EnemiesKilled", TankService.instance.GetCurrentTankModel().EnemiesKilled);
+            // Debug.Log(TankService.instance.GetCurrentTankModel().EnemiesKilled);
+            // UIService.instance.UpdateScoreText();
+            AchievementService.Instance.GetAchievementController().CheckForEnemyKilledAchievement();
+            if (TankService.Instance.GetCurrentTankModel().enemyKilled == 5)
+            {
+                UIManager.Instance.PopUpPlayerWinPanel();
+            }
+        }
+
+        //enemy spawning randomly 
         void SpawningEnemy()
         {
-            int num = Random.Range(0, enemyPos.Count-1);
+            int num = Random.Range(0, enemyPos.Count);
             CreateNewTank(enemyPos[num]);
             enemyPos.RemoveAt(num);
         }
 
-        IEnumerator SpawnWaiting()
+        //coroutine for spawn enemies  
+        async void SpawnWaiting()
         {
-            SpawningEnemy();
-            yield return new WaitForSeconds(spwanTime);
-            if (count >= 5)
+            for (int i = 0; i < count; i++)
             {
-                StopCoroutine(SpawnWaiting());
+                await new WaitForSeconds(spwanTime);
+                SpawningEnemy();
+                Debug.Log("Wait for 5 sec");
+
             }
-            else
-            {
-                StartCoroutine(SpawnWaiting());
-            }
-            count++;
         }
 
+        //destroy enemy tank after death
         public void DestroyEnemyTank(EnemyTankController enemyTank)
         {
             enemyTank.DestroyEnemyController();
         }
 
+        //unsubscribing from event
+        public void UnsubscribeEvents()
+        {
+            Debug.Log("Unscub");
+            AchievementService.Instance.OnEnemyKilled -= UpdateEnemiesKilledCount;
+        }
+
+        //returns enemytank controller
         public EnemyTankController GetEnemyTankController()
         {
             return enemyTankController;

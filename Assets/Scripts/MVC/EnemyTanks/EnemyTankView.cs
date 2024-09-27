@@ -7,97 +7,97 @@ namespace Outscal.BattleTank
     /// <summary>
     /// creating enemy tank view
     /// </summary>
-    public class EnemyTankView : MonoBehaviour
+    public class EnemyTankView : MonoBehaviour,IDamagable
     {
-        private NavMeshAgent navMeshAgent;
+        #region Components And Variables
+        public NavMeshAgent enemyNavMesh;
         public EnemyTankController enemyTankController;
-        private float maxZ, maxX, minZ, minX;
-        public Transform bulletShootPoint;
-        private float patrollTime;
-        private float howClose;
-        private float timer;
-        private float canFire=0f;
         private BoxCollider ground;
+        public float maxX, maxZ, minX, minZ;
+        public float timer,patrolTime;
+        public float howClose;
+        public float canFire = 0f;
+        public Transform BulletShootPoint;
         public MeshRenderer[] childs;
-      
-        private void Awake()
+        #endregion
+
+        #region EnemyTankSates
+        public EnemyPatrollingState patrollingState;
+        public EnemyChasingState chasingState;
+        public EnemyAttackingState attackingState;
+        public EnemyTankState currentState;
+        #endregion
+
+        #region EnemyEnums
+        public EnemyState initialState;
+        public EnemyState activeState;
+        #endregion
+
+       
+        
+        
+        void Awake()
         {
-            navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
+            enemyNavMesh = gameObject.GetComponent<NavMeshAgent>();
         }
 
-        private void Start()
+        void Start()
+        {
+            currentState = patrollingState;
+            InitializeState();
+            SetGroundForEnemyPatrolling();
+            timer = 5f;
+            patrolTime = 2f;
+            howClose = 15f;
+            //Invoke("Patrol", 1f);
+        }
+
+        public void SetEnemyTankController(EnemyTankController _enemyController)
+        {
+            enemyTankController = _enemyController;
+        }
+
+        //setting ground for patrolling of enemy
+        private void SetGroundForEnemyPatrolling()
         {
             ground = GroundBoxCollider.groundBoxCollider;
             maxX = ground.bounds.max.x;
             maxZ = ground.bounds.max.z;
             minX = ground.bounds.min.x;
             minZ = ground.bounds.min.z;
-            timer = 0;
-            patrollTime = 5f;
-            howClose = 20f;
-            Invoke("Patrol", 1f);           
         }
 
-        private void Update()
+        void Update()
         {
-            if (TankService.Instance.PlayerPos() != null)
-            {
-                float distance = Vector3.Distance(TankService.Instance.PlayerPos().position, transform.position);
-                if (distance <= howClose)
-                {
-                    transform.LookAt(TankService.Instance.PlayerPos());
-                    navMeshAgent.SetDestination(TankService.Instance.PlayerPos().position);
-                    ShootBullet();
-                }
-                else
-                {
-                    Patrol();
-                }
-            }
-            else
-            {
-                Patrol();
-            }
+            enemyTankController.EnemyPatrollingAI();
         }
 
-        public void SetEnemyTankController(EnemyTankController _enemyTankController) 
+        //swith cases for different enemy states
+        private void InitializeState()
         {
-            enemyTankController = _enemyTankController;
-        }
-        //enemy tank will get random positions to patrolling
-        public Vector3 GetRandomPosition()
-        {
-            float x = Random.Range(minX, maxX);
-            float z = Random.Range(minZ, maxZ);
-            Vector3 randomDir = new Vector3(x, 0, z);
-            return randomDir;
-        }
-        //setting patrolling destination
-        public void SetPatrollingDestination()
-        {        
-            Vector3 newDestnation = GetRandomPosition();
-            navMeshAgent.SetDestination(newDestnation);
-        }
-        //enemy patroll function
-        public void Patrol()
-        {
-            timer += Time.deltaTime;
-            if (timer > patrollTime)
+            switch (initialState)
             {
-                SetPatrollingDestination();
-                timer = 0;
+
+                case EnemyState.Attacking:
+                    currentState = attackingState;
+                    break;
+
+                case EnemyState.Chasing:
+                    currentState = chasingState;
+                    break;
+
+                case EnemyState.Patrolling:
+                    currentState = patrollingState;
+                    break;
+
+                default:
+                    currentState = null;
+                    break;
             }
+            currentState.OnEnterState();
         }
-        //enemy shooting function
-        private void ShootBullet()
-        {
-            if (canFire < Time.time)
-            {
-                canFire = enemyTankController.EnemyTankModel.fireRate + Time.time;
-                enemyTankController.ShootBullet();
-            }
-        }
-        //enemy tank destroy view
+
+        //after death all the child componenets will also destroy
         public void DestroyView()
         {
             Debug.Log("Destroy Enemy View called");
@@ -105,10 +105,16 @@ namespace Outscal.BattleTank
             {
                 childs[i] = null;
             }
-            bulletShootPoint = null;
-            navMeshAgent = null;
+            BulletShootPoint = null;
+            enemyNavMesh = null;
             ground = null;
             Destroy(this.gameObject);
+        }
+
+        //interface for apply damage to enemy
+        public void TakeDamage(int damage)
+        {
+            enemyTankController.ApplyDamage(damage);
         }
     }
 }

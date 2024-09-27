@@ -8,8 +8,17 @@ namespace Outscal.BattleTank
     /// </summary>
     public class BulletView : MonoBehaviour
     {
+        #region
         public BulletController bulletController { get; private set; }
-        public float m_MaxLifeTime = 1f;
+        #endregion
+
+        #region serialized field
+        [SerializeField] private ParticleSystem bulletVfx;
+        #endregion
+
+        #region referances of other classes
+        private EnemyTankView enemyTank;
+        #endregion
 
         private void FixedUpdate()
         {
@@ -25,14 +34,23 @@ namespace Outscal.BattleTank
         {
             if (collision.gameObject.GetComponent<EnemyTankView>() != null)
             {
+                //EnemyTankService.Instance.GetEnemyTankController().ApplyDamage(bulletController.bulletModel.Damage);
                 EnemyTankView enemyTankView = collision.gameObject.GetComponent<EnemyTankView>();
                 enemyTankView.enemyTankController.ApplyDamage(bulletController.bulletModel.Damage);
             }
             else if (collision.gameObject.GetComponent<TankView>() != null)
-            {   
+            {
                 TankService.Instance.GetTankController().ApplyDamage(bulletController.bulletModel.Damage);
             }
-                Destroy(gameObject);
+            DestroyBullets();
+        }
+
+        private void DestroyBullets()
+        {
+            bulletVfx.transform.parent = null;
+            bulletVfx.Play();
+            //Destroy(BullectDestroyVFX.gameObject, BullectDestroyVFX.main.duration);
+            Destroy(gameObject);
         }
     }
 }
